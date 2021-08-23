@@ -11,26 +11,22 @@ import (
 func main() {
 	r := gee.New()
 	r.GET("/", func(c *gee.Context) {
-		c.HTML(http.StatusOK, "<h1> 123 </h1>")
+		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
 	})
 
-	r.GET("/string", func(c *gee.Context) {
+	r.GET("/hello", func(c *gee.Context) {
+		// expect /hello?name=geektutu
 		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
 	})
 
-	r.POST("/login", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{
-			"username": c.PostForm("username"),
-			"password": c.PostForm("password"),
-		})
+	r.GET("/hello/:name", func(c *gee.Context) {
+		// expect /hello/geektutu
+		c.String(http.StatusOK, "hello %s, you're at %s\n", c.GetParam("name"), c.Path)
 	})
 
-	r.GET("/json", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{
-			"username": c.Query("username"),
-			"password": c.Query("password"),
-		})
+	r.GET("/assets/*filepath", func(c *gee.Context) {
+		c.JSON(http.StatusOK, gee.H{"filepath": c.GetParam("filepath")})
 	})
 
-	r.Run(":9999")
+	_ = r.Run(":9999")
 }

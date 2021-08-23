@@ -7,20 +7,26 @@ import (
 )
 
 type Context struct {
-	Writer http.ResponseWriter
-	Req *http.Request
+	Writer     http.ResponseWriter
+	Req        *http.Request
 	StatusCode int
-	Path string
-	Method string
+	Path       string
+	Method     string
+	Params     map[string]string
 }
 
-func NewContext (w http.ResponseWriter, r *http.Request) *Context {
+func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{
-		Writer:     w,
-		Req:        r,
-		Path:       r.URL.Path,
-		Method:     r.Method,
+		Writer: w,
+		Req:    r,
+		Path:   r.URL.Path,
+		Method: r.Method,
 	}
+}
+
+func (c *Context) GetParam(name string) string {
+	value, _ := c.Params[name]
+	return value
 }
 
 func (c *Context) Query(name string) string {
